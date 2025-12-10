@@ -1,0 +1,1025 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kabul Exchange | Global Live Rates</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --matte-black: #0a0a0f;
+            --dark-gray: #15151e;
+            --neon-green: #00ff9d;
+            --neon-cyan: #00eeff;
+            --neon-purple: #b967ff;
+            --neon-gold: #ffd700;
+            --neon-pink: #ff00ff;
+            --glass-bg: rgba(20, 20, 30, 0.6);
+            --glass-border: rgba(100, 255, 255, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--matte-black);
+            color: #fff;
+            overflow-x: hidden;
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 255, 157, 0.03) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(0, 238, 255, 0.03) 0%, transparent 20%),
+                radial-gradient(circle at 50% 50%, rgba(185, 103, 255, 0.02) 0%, transparent 30%);
+        }
+
+        /* Header Styles */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10, 10, 15, 0.85);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 238, 255, 0.1);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 2rem;
+            background: linear-gradient(90deg, var(--neon-green), var(--neon-cyan), var(--neon-purple));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 15px rgba(0, 255, 157, 0.5);
+            position: relative;
+            letter-spacing: 1px;
+        }
+
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--neon-green), var(--neon-cyan), var(--neon-purple));
+            border-radius: 2px;
+            box-shadow: 0 0 10px rgba(0, 238, 255, 0.7);
+        }
+
+        .live-badge {
+            background: linear-gradient(90deg, #ff0040, #ff0066);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 0 10px rgba(255, 0, 64, 0.5);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .live-badge i {
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .telegram-btn {
+            background: linear-gradient(90deg, #0088cc, #00a2e8);
+            color: white;
+            padding: 0.7rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(0, 136, 204, 0.4);
+        }
+
+        .telegram-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 20px rgba(0, 136, 204, 0.7);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 12rem 3rem 5rem;
+            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(90deg, var(--neon-green), var(--neon-cyan), var(--neon-gold));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 20px rgba(0, 238, 255, 0.3);
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: #aaa;
+            margin-bottom: 3rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .hero-subtitle span {
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 238, 255, 0.1);
+        }
+
+        /* Tabs */
+        .tabs-container {
+            max-width: 1000px;
+            margin: 0 auto 4rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            border: 1px solid var(--glass-border);
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .tab {
+            padding: 1rem 2.5rem;
+            background: transparent;
+            border: none;
+            color: #aaa;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 600;
+            font-size: 1.1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab.active {
+            color: white;
+            background: rgba(0, 238, 255, 0.1);
+            border: 1px solid rgba(0, 238, 255, 0.3);
+            box-shadow: 0 0 15px rgba(0, 238, 255, 0.2);
+        }
+
+        .tab.active::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Market Tables */
+        .market-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .market-table th {
+            text-align: left;
+            padding: 1.2rem 1rem;
+            color: var(--neon-cyan);
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 600;
+            border-bottom: 1px solid rgba(0, 238, 255, 0.2);
+            font-size: 1rem;
+        }
+
+        .market-table td {
+            padding: 1.2rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .market-table tr:hover td {
+            background: rgba(0, 238, 255, 0.05);
+            transform: translateX(5px);
+        }
+
+        .coin-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .coin-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--neon-green), var(--neon-cyan));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            box-shadow: 0 0 10px rgba(0, 255, 157, 0.5);
+        }
+
+        .coin-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .coin-symbol {
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        .price-change {
+            padding: 0.4rem 0.8rem;
+            border-radius: 5px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .price-change.positive {
+            background: rgba(0, 255, 157, 0.1);
+            color: var(--neon-green);
+        }
+
+        .price-change.negative {
+            background: rgba(255, 0, 64, 0.1);
+            color: #ff0040;
+        }
+
+        .persian-numeral {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            direction: ltr;
+            unicode-bidi: embed;
+        }
+
+        /* 3D Card Effects */
+        .card-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.5s ease;
+        }
+
+        .card-3d:hover {
+            transform: rotateY(10deg) rotateX(5deg) translateZ(10px);
+        }
+
+        /* Chart Container */
+        .chart-container {
+            margin-top: 3rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            border: 1px solid var(--glass-border);
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .chart-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--neon-cyan);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 5rem;
+            padding: 3rem;
+            text-align: center;
+            background: rgba(10, 10, 15, 0.9);
+            border-top: 1px solid rgba(0, 238, 255, 0.1);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .copyright {
+            color: #aaa;
+            font-size: 1rem;
+        }
+
+        .footer-logo {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 1.8rem;
+            background: linear-gradient(90deg, var(--neon-green), var(--neon-cyan));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero h1 {
+                font-size: 3rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            header {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding: 10rem 1.5rem 3rem;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .tabs {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .tab {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .market-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .header-right {
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+            
+            .logo {
+                font-size: 1.5rem;
+            }
+            
+            .live-badge {
+                font-size: 0.7rem;
+                padding: 0.2rem 0.6rem;
+            }
+            
+            .telegram-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--dark-gray);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(var(--neon-green), var(--neon-cyan));
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(var(--neon-cyan), var(--neon-purple));
+        }
+
+        /* Floating Animations */
+        .floating-element {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Background Particles */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Particles -->
+    <div id="particles-js"></div>
+    
+    <!-- Header -->
+    <header>
+        <div class="logo-container">
+            <div class="logo">KABUL EXCHANGE</div>
+            <div class="live-badge">
+                <i class="fas fa-circle"></i>
+                Live • AI-Powered
+            </div>
+        </div>
+        
+        <div class="header-right">
+            <a href="https://t.me/kabul_exchange" class="telegram-btn" target="_blank">
+                <i class="fab fa-telegram-plane"></i>
+                Join Telegram
+            </a>
+        </div>
+    </header>
+    
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1 class="floating-element">Global Live Rates</h1>
+        <div class="hero-subtitle">
+            <span>Crypto</span>
+            <span>Forex</span>
+            <span>Gold</span>
+            <span>Updated Every Second</span>
+        </div>
+    </section>
+    
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Tabs -->
+        <div class="tabs-container card-3d">
+            <div class="tabs">
+                <button class="tab active" data-tab="crypto">Crypto</button>
+                <button class="tab" data-tab="forex">Forex & Fiat</button>
+                <button class="tab" data-tab="gold">Gold</button>
+            </div>
+            
+            <!-- Crypto Tab -->
+            <div class="tab-content active" id="crypto">
+                <table class="market-table">
+                    <thead>
+                        <tr>
+                            <th>ASSET</th>
+                            <th>PRICE (USD)</th>
+                            <th>PRICE (IRR)</th>
+                            <th>PRICE (AFN)</th>
+                            <th>24H CHANGE</th>
+                            <th>MARKET CAP</th>
+                        </tr>
+                    </thead>
+                    <tbody id="crypto-table">
+                        <!-- Crypto data will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Forex Tab -->
+            <div class="tab-content" id="forex">
+                <table class="market-table">
+                    <thead>
+                        <tr>
+                            <th>PAIR</th>
+                            <th>PRICE</th>
+                            <th>24H CHANGE</th>
+                            <th>BUY/SELL</th>
+                        </tr>
+                    </thead>
+                    <tbody id="forex-table">
+                        <!-- Forex data will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Gold Tab -->
+            <div class="tab-content" id="gold">
+                <table class="market-table">
+                    <thead>
+                        <tr>
+                            <th>METAL</th>
+                            <th>PRICE (USD)</th>
+                            <th>PRICE (IRR)</th>
+                            <th>PRICE (AFN)</th>
+                            <th>24H CHANGE</th>
+                        </tr>
+                    </thead>
+                    <tbody id="gold-table">
+                        <!-- Gold data will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Chart Container -->
+        <div class="chart-container card-3d">
+            <div class="chart-title">
+                <i class="fas fa-chart-line"></i>
+                <span>BTC/USD 24H Price Chart</span>
+            </div>
+            <canvas id="priceChart"></canvas>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="copyright">
+                &copy; <span class="footer-logo">Kabul Exchange</span> 2025. All rights reserved.
+            </div>
+            <a href="https://t.me/kabul_exchange" class="telegram-btn" target="_blank">
+                <i class="fab fa-telegram-plane"></i>
+                Join Our Telegram Channel
+            </a>
+        </div>
+    </footer>
+    
+    <script>
+        // Initialize particles background
+        document.addEventListener('DOMContentLoaded', function() {
+            // Simple particle system implementation
+            const particlesContainer = document.getElementById('particles-js');
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            particlesContainer.appendChild(canvas);
+            
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            const particles = [];
+            const particleCount = 80;
+            
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.size = Math.random() * 2 + 0.5;
+                    this.speedX = Math.random() * 0.5 - 0.25;
+                    this.speedY = Math.random() * 0.5 - 0.25;
+                    this.color = Math.random() > 0.5 ? 'rgba(0, 255, 157, 0.3)' : 'rgba(0, 238, 255, 0.3)';
+                }
+                
+                update() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+                    
+                    if (this.x > canvas.width) this.x = 0;
+                    else if (this.x < 0) this.x = canvas.width;
+                    if (this.y > canvas.height) this.y = 0;
+                    else if (this.y < 0) this.y = canvas.height;
+                }
+                
+                draw() {
+                    ctx.fillStyle = this.color;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+            
+            function initParticles() {
+                for (let i = 0; i < particleCount; i++) {
+                    particles.push(new Particle());
+                }
+            }
+            
+            function animateParticles() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                for (let particle of particles) {
+                    particle.update();
+                    particle.draw();
+                }
+                
+                // Draw connections
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+                        
+                        if (distance < 100) {
+                            ctx.beginPath();
+                            ctx.strokeStyle = `rgba(0, 238, 255, ${0.1 * (1 - distance/100)})`;
+                            ctx.lineWidth = 0.5;
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+                
+                requestAnimationFrame(animateParticles);
+            }
+            
+            window.addEventListener('resize', function() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+            
+            initParticles();
+            animateParticles();
+            
+            // Tab switching functionality
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const targetTab = tab.getAttribute('data-tab');
+                    
+                    // Update active tab
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    // Show target tab content
+                    tabContents.forEach(content => {
+                        content.classList.remove('active');
+                        if (content.id === targetTab) {
+                            content.classList.add('active');
+                        }
+                    });
+                });
+            });
+            
+            // Sample data for crypto prices with Persian numerals
+            const cryptoData = [
+                { 
+                    name: "Bitcoin", 
+                    symbol: "BTC", 
+                    priceUSD: 65432.10, 
+                    priceIRR: 2748150000, 
+                    priceAFN: 4730000, 
+                    change: 2.34,
+                    marketCap: "1.28T"
+                },
+                { 
+                    name: "Ethereum", 
+                    symbol: "ETH", 
+                    priceUSD: 3456.78, 
+                    priceIRR: 145184000, 
+                    priceAFN: 249800, 
+                    change: -1.23,
+                    marketCap: "415B"
+                },
+                { 
+                    name: "Binance Coin", 
+                    symbol: "BNB", 
+                    priceUSD: 567.89, 
+                    priceIRR: 23851400, 
+                    priceAFN: 41050, 
+                    change: 0.56,
+                    marketCap: "87B"
+                },
+                { 
+                    name: "Solana", 
+                    symbol: "SOL", 
+                    priceUSD: 123.45, 
+                    priceIRR: 5185000, 
+                    priceAFN: 8920, 
+                    change: 5.67,
+                    marketCap: "54B"
+                },
+                { 
+                    name: "Cardano", 
+                    symbol: "ADA", 
+                    priceUSD: 0.56, 
+                    priceIRR: 23520, 
+                    priceAFN: 40.5, 
+                    change: -0.89,
+                    marketCap: "20B"
+                },
+                { 
+                    name: "XRP", 
+                    symbol: "XRP", 
+                    priceUSD: 0.78, 
+                    priceIRR: 32760, 
+                    priceAFN: 56.4, 
+                    change: 1.23,
+                    marketCap: "42B"
+                },
+                { 
+                    name: "Polkadot", 
+                    symbol: "DOT", 
+                    priceUSD: 7.89, 
+                    priceIRR: 331380, 
+                    priceAFN: 570, 
+                    change: 3.45,
+                    marketCap: "10B"
+                },
+                { 
+                    name: "Dogecoin", 
+                    symbol: "DOGE", 
+                    priceUSD: 0.12, 
+                    priceIRR: 5040, 
+                    priceAFN: 8.7, 
+                    change: -2.34,
+                    marketCap: "17B"
+                }
+            ];
+            
+            // Function to convert numbers to Persian numerals
+            function toPersianNumeral(num) {
+                const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+                return num.toString().replace(/\d/g, digit => persianDigits[parseInt(digit)]);
+            }
+            
+            // Function to format large numbers with commas
+            function formatNumber(num) {
+                return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            }
+            
+            // Populate crypto table
+            const cryptoTable = document.getElementById('crypto-table');
+            cryptoData.forEach(coin => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <div class="coin-info">
+                            <div class="coin-icon">${coin.symbol.charAt(0)}</div>
+                            <div>
+                                <div class="coin-name">${coin.name}</div>
+                                <div class="coin-symbol">${coin.symbol}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>$${formatNumber(coin.priceUSD.toFixed(2))}</td>
+                    <td class="persian-numeral">${toPersianNumeral(formatNumber(Math.round(coin.priceIRR)))} IRR</td>
+                    <td class="persian-numeral">${toPersianNumeral(formatNumber(Math.round(coin.priceAFN)))} AFN</td>
+                    <td>
+                        <span class="price-change ${coin.change >= 0 ? 'positive' : 'negative'}">
+                            ${coin.change >= 0 ? '+' : ''}${coin.change.toFixed(2)}%
+                        </span>
+                    </td>
+                    <td>$${coin.marketCap}</td>
+                `;
+                cryptoTable.appendChild(row);
+            });
+            
+            // Sample forex data
+            const forexData = [
+                { pair: "USD/AFN", price: 78.45, change: 0.12, buy: 78.50, sell: 78.40 },
+                { pair: "EUR/USD", price: 1.0823, change: -0.23, buy: 1.0825, sell: 1.0820 },
+                { pair: "GBP/USD", price: 1.2645, change: 0.34, buy: 1.2650, sell: 1.2640 },
+                { pair: "USD/IRR", price: 42000, change: 0.56, buy: 42050, sell: 41950 },
+                { pair: "USD/TRY", price: 32.15, change: 1.23, buy: 32.20, sell: 32.10 },
+                { pair: "USD/CNY", price: 7.2456, change: -0.12, buy: 7.2460, sell: 7.2450 },
+                { pair: "USD/RUB", price: 92.34, change: 0.89, buy: 92.40, sell: 92.28 },
+                { pair: "USD/JPY", price: 154.67, change: 0.45, buy: 154.70, sell: 154.65 }
+            ];
+            
+            // Populate forex table
+            const forexTable = document.getElementById('forex-table');
+            forexData.forEach(forex => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <div class="coin-info">
+                            <div class="coin-icon" style="background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));">${forex.pair.substring(0, 1)}</div>
+                            <div>
+                                <div class="coin-name">${forex.pair}</div>
+                                <div class="coin-symbol">Forex Pair</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${forex.price}</td>
+                    <td>
+                        <span class="price-change ${forex.change >= 0 ? 'positive' : 'negative'}">
+                            ${forex.change >= 0 ? '+' : ''}${forex.change.toFixed(2)}%
+                        </span>
+                    </td>
+                    <td>${forex.buy} / ${forex.sell}</td>
+                `;
+                forexTable.appendChild(row);
+            });
+            
+            // Sample gold data
+            const goldData = [
+                { metal: "Gold (24K)", priceUSD: 2345.67, priceIRR: 98500000, priceAFN: 183900, change: 0.89 },
+                { metal: "Gold (22K)", priceUSD: 2150.45, priceIRR: 90300000, priceAFN: 168500, change: 0.76 },
+                { metal: "Gold (18K)", priceUSD: 1765.34, priceIRR: 74130000, priceAFN: 138200, change: 0.67 },
+                { metal: "Silver", priceUSD: 28.45, priceIRR: 1195000, priceAFN: 2230, change: 1.23 },
+                { metal: "Platinum", priceUSD: 985.67, priceIRR: 41390000, priceAFN: 77200, change: -0.34 }
+            ];
+            
+            // Populate gold table
+            const goldTable = document.getElementById('gold-table');
+            goldData.forEach(metal => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <div class="coin-info">
+                            <div class="coin-icon" style="background: linear-gradient(135deg, var(--neon-gold), #ffaa00);">Au</div>
+                            <div>
+                                <div class="coin-name">${metal.metal}</div>
+                                <div class="coin-symbol">Precious Metal</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>$${formatNumber(metal.priceUSD.toFixed(2))}</td>
+                    <td class="persian-numeral">${toPersianNumeral(formatNumber(Math.round(metal.priceIRR)))} IRR</td>
+                    <td class="persian-numeral">${toPersianNumeral(formatNumber(Math.round(metal.priceAFN)))} AFN</td>
+                    <td>
+                        <span class="price-change ${metal.change >= 0 ? 'positive' : 'negative'}">
+                            ${metal.change >= 0 ? '+' : ''}${metal.change.toFixed(2)}%
+                        </span>
+                    </td>
+                `;
+                goldTable.appendChild(row);
+            });
+            
+            // Initialize price chart
+            const ctxChart = document.getElementById('priceChart').getContext('2d');
+            
+            // Generate sample price data
+            const labels = [];
+            const data = [];
+            let currentPrice = 65000;
+            
+            for (let i = 0; i < 24; i++) {
+                labels.push(`${i}:00`);
+                const change = (Math.random() - 0.5) * 800;
+                currentPrice += change;
+                data.push(currentPrice);
+            }
+            
+            const priceChart = new Chart(ctxChart, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'BTC/USD',
+                        data: data,
+                        borderColor: '#00ff9d',
+                        backgroundColor: 'rgba(0, 255, 157, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#00eeff',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
+                        pointRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#ffffff',
+                                font: {
+                                    family: "'Orbitron', sans-serif"
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#aaa'
+                            }
+                        },
+                        y: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#aaa',
+                                callback: function(value) {
+                                    return '$' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Update prices every few seconds to simulate live updates
+            setInterval(() => {
+                // Randomly update some crypto prices
+                const cryptoRows = cryptoTable.querySelectorAll('tr');
+                cryptoRows.forEach((row, index) => {
+                    if (index < cryptoData.length) {
+                        const changeCell = row.querySelector('.price-change');
+                        const usdCell = row.cells[1];
+                        const irrCell = row.cells[2];
+                        const afnCell = row.cells[3];
+                        
+                        // Small random price change
+                        const change = (Math.random() - 0.5) * 0.5;
+                        const currentUSD = parseFloat(cryptoData[index].priceUSD);
+                        const newUSD = currentUSD * (1 + change/100);
+                        
+                        cryptoData[index].priceUSD = newUSD;
+                        cryptoData[index].priceIRR = newUSD * 42000;
+                        cryptoData[index].priceAFN = newUSD * 78.45;
+                        cryptoData[index].change += change;
+                        
+                        // Update cells
+                        usdCell.textContent = `$${formatNumber(newUSD.toFixed(2))}`;
+                        irrCell.innerHTML = `${toPersianNumeral(formatNumber(Math.round(cryptoData[index].priceIRR)))} IRR`;
+                        afnCell.innerHTML = `${toPersianNumeral(formatNumber(Math.round(cryptoData[index].priceAFN)))} AFN`;
+                        
+                        // Update change indicator
+                        changeCell.textContent = `${cryptoData[index].change >= 0 ? '+' : ''}${cryptoData[index].change.toFixed(2)}%`;
+                        changeCell.className = `price-change ${cryptoData[index].change >= 0 ? 'positive' : 'negative'}`;
+                    }
+                });
+            }, 3000);
+        });
+    </script>
+</body>
+</html>
